@@ -9,12 +9,32 @@ export const CreateContact = () => {
   const [email, setEmail] = useState ('');
   const [phone, setPhone] = useState ('');
   const [address, setAddress] = useState ('');
+  const [isLoading, setIsLoading] = useState (true);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (id) {
-      const contact = store.contacts.find(contact => contact.id === id);
+    if (store.contacts.length === 0 && !isLoading) {
+      actions.getContacts().then(() => {
+        setIsLoading(false);
+      });
+    } else {
+      setIsLoading(false);
+    }
+  }, [store.contacts, actions, isLoading]);
+  // useEffect(() => {
+  //   if (store.contacts.length === 0) {
+  //     actions.getContacts().then(() => {
+  //       setIsLoading(false);
+  //     });
+  //   } else {
+  //     setIsLoading(false);
+  //   }
+  // }, [store.contacts]);
+
+  useEffect(() => {
+    if (!isLoading && id) {
+      const contact = store.contacts.find(contact => contact.id === parseInt(id));
       if (contact) {
         setName(contact.name);
         setAddress(contact.address);
@@ -22,7 +42,7 @@ export const CreateContact = () => {
         setPhone(contact.phone);
       }
     }
-  }, [id, store.contacts]);
+  }, [id, store.contacts, isLoading]);
 
   const handleSave = async () => {
     const contactData = {
@@ -35,7 +55,7 @@ export const CreateContact = () => {
     if (id) {
       await actions.editContact(id, contactData);
     } else {
-      await actions.CreateContact(contactData);
+      await actions.createContact(contactData);
     }
     navigate("/");
     /* actions.createContact({

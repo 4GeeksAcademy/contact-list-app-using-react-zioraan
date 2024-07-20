@@ -1,5 +1,5 @@
 
-import { CreateContact } from "../component/CreateContact";
+// import { CreateContact } from "../component/CreateContact";
 
 
 const getState = ({ getStore, getActions, setStore }) => {
@@ -9,7 +9,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 	};
 
 const refreshContacts = () => {
-	fetch("https://playground.4geeks.com/contact/agendas/Ryan/contacts")
+	return fetch("https://playground.4geeks.com/contact/agendas/Ryan/contacts")
 		.then(handleResponse)
 		.then((data) => {
 			console.log("fetched contacts data:", data);
@@ -75,7 +75,16 @@ const refreshContacts = () => {
 				} catch (error) {
 				  console.error("editing contact failed:", error);
 				}
-			  },
+			},
+
+			deleteContact: (id) => {
+				fetch(`https://playground.4geeks.com/contact/agendas/Ryan/contacts/${id}`, {
+					method: "DELETE",
+				})
+				.then(handleResponse)
+				.then(() => { refreshContacts(); })
+				.catch((error) => console.error("deleting contact failed:", error));
+			},
 		}
 	};
 };

@@ -1,10 +1,23 @@
-import React , {useContext } from "react";
+import React , {useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import { Context } from "../store/appContext";
 import PropTypes from "prop-types";
+import Modal from "./modal";
 
 export const ContactCard = ({contact}) => {
-  const {store,actions} = useContext(Context)
+  const {store,actions} = useContext(Context);
+  const [showModal, setShowModal] = useState(false);
+
+  const handleDelete = () => {
+    setShowModal(true);
+  };
+  const onClose = () => {
+    setShowModal(false);
+  };
+  const onDelete = () => {
+    actions.deleteContact(contact.id);
+    setShowModal(false);
+  };
 
   return (
     <li className="list-group-item">
@@ -24,7 +37,8 @@ export const ContactCard = ({contact}) => {
                         </div>
                         <div className="me-0">
                           <Link to={`edit-contact/${contact.id}`} className="btn"><i className="fas fa-pencil-alt mr-3"></i></Link>
-                          <button className="btn" onClick={() => this.props.onDelete()}><i className="fas fa-trash-alt"></i></button>
+                          <button className="btn" onClick={handleDelete}><i className="fas fa-trash-alt"></i></button>
+                          <Modal show={showModal} onClose={onClose} onDelete={onDelete} />
                         </div>
                     </div>
                 </div>
