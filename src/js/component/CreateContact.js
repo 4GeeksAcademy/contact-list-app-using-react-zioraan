@@ -14,14 +14,17 @@ export const CreateContact = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (store.contacts.length === 0 && !isLoading) {
-      actions.getContacts().then(() => {
-        setIsLoading(false);
-      });
-    } else {
+    const fetchContacts = async () => {
+      if (store.contacts.length === 0) {
+        await actions.getContacts();
+      }
       setIsLoading(false);
+    };
+    if (isLoading) {
+      fetchContacts();
     }
-  }, [store.contacts, actions, isLoading]);
+    
+  }, [store.contacts.length, actions, isLoading]);
   // useEffect(() => {
   //   if (store.contacts.length === 0) {
   //     actions.getContacts().then(() => {
